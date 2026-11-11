@@ -1,7 +1,7 @@
 
 
-def detect_deadlock(processes, available, allocation, request):
-   n = len(processes)
+def detect_deadlocks(processes, available, allocation, request):
+   n = processes
    m = len(available)
 
    # Khoi tao Work va Finish
@@ -13,7 +13,7 @@ def detect_deadlock(processes, available, allocation, request):
             finish[i] = True
 
    safe_sequence = []
-
+   safe_sequences = []
    # Tim tien trinh co the thuc hien
    while True:
       found = False
@@ -23,23 +23,16 @@ def detect_deadlock(processes, available, allocation, request):
                   for j in range(m):
                      work[j] += allocation[i][j]
                      finish[i] = True
-                     safe_sequence.append(processes[i])
+                     safe_sequence.append(f"P{i}")
                   found = True
                   break
       if not found:
             break
 
    # Ket luan
-   deadlocked_processes = [processes[i] for i in range(n) if not finish[i]]
-   return deadlocked_processes, safe_sequence
+   deadlocked_processes = [f"P{i}" for i in range(n) if not finish[i]]
+   for i in range(len(safe_sequence)):
+      if safe_sequence[i] not in safe_sequences:
+         safe_sequences.append(safe_sequence[i])
+   return deadlocked_processes, safe_sequences
 
-
-
-processes = ['P0', 'P1', 'P2']
-available = [0,0,0]
-allocation = [[0,1,0], [2,0,0], [3,0,3]]
-request = [[0, 1, 0], [2, 0, 2], [0, 0, 0]]
-
-deadlock_processes, safe_sequence = detect_deadlock(processes, available, allocation, request)
-print(f"deadlock_processes = {deadlock_processes}")
-print(f"Safe sequence = {safe_sequence}")
